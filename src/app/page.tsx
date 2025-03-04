@@ -1,34 +1,15 @@
 "use client"
 
-import {useState, useEffect} from 'react';
-import hljs from 'highlight.js';
-import {Editor} from '@monaco-editor/react';
-import LZString from 'lz-string';
+import {Editor} from "@monaco-editor/react";
+import LZString from "lz-string";
+import {useState} from "react";
+import hljs from "highlight.js";
 
-export default function CodePing() {
+export default function TinyCodeShare() {
     const [code, setCode] = useState('');
-    const [language, setLanguage] = useState('javascript');
-    const [autoDetect, setAutoDetect] = useState(true);
     const [isEditable, setIsEditable] = useState(true);
-
-    useEffect(() => {
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const encodedSnippet = hashParams.get('code');
-        const langParam = hashParams.get('lang');
-
-        if (encodedSnippet) {
-            const decompressedCode = LZString.decompressFromEncodedURIComponent(encodedSnippet);
-            if (decompressedCode) {
-                setCode(decompressedCode);
-            }
-            setAutoDetect(false);
-            setIsEditable(false);
-        }
-
-        if (langParam) {
-            setLanguage(langParam);
-        }
-    }, []);
+    const [autoDetect, setAutoDetect] = useState(true);
+    const [language, setLanguage] = useState('javascript');
 
     const handleShare = () => {
         const compressedCode = LZString.compressToEncodedURIComponent(code);
@@ -49,6 +30,10 @@ export default function CodePing() {
         }
     };
 
+    const toggleEditable = () => {
+        setIsEditable(!isEditable);
+    };
+
     const toggleAutoDetect = () => {
         setAutoDetect(!autoDetect);
         if (!autoDetect) {
@@ -57,21 +42,34 @@ export default function CodePing() {
         }
     };
 
-    const toggleEditable = () => {
-        setIsEditable(!isEditable);
-    };
-
     return (
-        <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-black">CodePing</h1>
-            <div className="w-full max-w-4xl p-6 shadow-lg">
-                <div className="flex items-center justify-between mb-4">
-                    <select
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                        disabled={autoDetect}
-                        className="px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-black"
-                    >
+        <>
+            <h1 className="text-5xl font-bold mt-1 text-center">TINY CODE SHARE</h1>
+            <hr className="border-black my-1"/>
+
+            <div className="flex flex-col items-end relative">
+
+                <div className="flex items-center space-x-4 mr-1">
+                    <label className="inline-flex items-center cursor-pointer border border-black p-1">
+                        <input type="checkbox" onChange={toggleEditable} className="sr-only peer"/>
+                        <div
+                            className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                        <span className="ms-3 text-sm font-medium">Edit</span>
+                    </label>
+
+                    <label className="inline-flex items-center cursor-pointer border border-black p-1">
+                        <input type="checkbox" onChange={toggleAutoDetect} className="sr-only peer"/>
+                        <div
+                            className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                        <span className="ms-3 text-sm font-medium">Detect</span>
+                    </label>
+
+                    <select className="border border-black p-1 bg-gray-100" value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            disabled={autoDetect}>
+                        <option>javascript</option>
+                        <option>python</option>
+                        <option>java</option>
                         {hljs.listLanguages().map(
                             (lang) => (
                                 <option key={lang} value={lang}>
@@ -80,41 +78,35 @@ export default function CodePing() {
                             )
                         )}
                     </select>
-                    <label className="ml-4 flex items-center text-black">
-                        <input
-                            type="checkbox"
-                            checked={autoDetect}
-                            onChange={toggleAutoDetect}
-                            className="mr-2"
-                        />
-                        Auto-detect
-                    </label>
-                    <label className="ml-4 flex items-center text-black">
-                        <input
-                            type="checkbox"
-                            checked={isEditable}
-                            onChange={toggleEditable}
-                            className="mr-2"
-                        />
-                        Editable
-                    </label>
                 </div>
-                <Editor
-                    height="60vh"
-                    language={language}
-                    value={code}
-                    onChange={handleCodeChange}
-                    theme="vs-dark"
-                    className="rounded-lg overflow-hidden border border-gray-300"
-                    options={{readOnly: !isEditable}}
-                />
-                <button
-                    onClick={handleShare}
-                    className="mt-4 w-full py-3 bg-indigo-600 text-white rounded-xl text-lg font-medium hover:bg-indigo-700 transition"
-                >
-                    Share Code
-                </button>
+
+                <div className="w-full h-full p-1">
+                    <Editor
+                        height="80vh"
+                        theme="vs-dark"
+                        onChange={handleCodeChange}
+                        options={{readOnly: !isEditable}}
+                        language={language}
+                        value={code}
+                    />
+                </div>
+
+                <div className="">
+                    <button
+                        onClick={handleShare}
+                        className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    >
+                        Get Link
+                    </button>
+                </div>
+
             </div>
-        </div>
+
+            <div>
+                <hr className="border-black"/>
+                Github, Linkedin
+            </div>
+
+        </>
     );
 }
