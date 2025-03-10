@@ -2,32 +2,18 @@
 
 import {Editor} from "@monaco-editor/react";
 import LZString from "lz-string";
-import {useState, useTransition} from "react";
+import {useState} from "react";
 import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
 
 // TODO: Volver todo un client component, por alguna razon el window.location lo tira desde el server
 // cosa que no tiene sentido por que estamos usando "use client" y deberia ser todo en el cliente.
+
 export default function TinyCodeShare() {
-    // TODO: Manejar con queryParam
-    const [isEditable, setIsEditable] = useState(true);
-    // TODO: Manejar con queryParam
     const [autoDetect, setAutoDetect] = useState(true);
-    // TODO: Manejar con queryParam
     const [language, setLanguage] = useState('javascript');
-
     const [linkCopied, setLinkCopied] = useState(false);
-
-    const [isPending, startTransition] = useTransition();
-
-    const VISIBLE_TIME = 3000;
-    const handleLinkCopied = useDebouncedCallback(() => {
-
-        startTransition(() => {
-            setLinkCopied(false)
-        });
-    }, VISIBLE_TIME);
 
     const getHashParams = () => {
         const hash = window.location.hash.substring(1);
@@ -35,13 +21,24 @@ export default function TinyCodeShare() {
     };
 
     const searchParams = getHashParams();
-    const selectedLanguage = searchParams.get("language");
     const compressedCode = searchParams.get("code") ?? '';
     const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(compressedCode));
+    const [isEditable, setIsEditable] = useState(searchParams.get("isEditable") ? searchParams.get("isEditable") === "true" : false);
+
+    const VISIBLE_TIME = 3000;
+    const handleLinkCopied = useDebouncedCallback(() => {
+        setLinkCopied(false)
+    }, VISIBLE_TIME);
 
     const handleShare = () => {
         const compressedCode = LZString.compressToEncodedURIComponent(code);
-        const shareableURL = `${window.location.origin}#code=${compressedCode}&lang=${language}`;
+
+        const searchParams = new URLSearchParams(window.location.hash.substring(1));
+        searchParams.set("code", compressedCode)
+        searchParams.set("lang", language)
+        searchParams.set("isEditable", isEditable.toString())
+
+        const shareableURL = `${window.location.origin}#${searchParams}`;
         navigator.clipboard.writeText(shareableURL)
             .then(() => {
                 console.log('Copied')
@@ -61,8 +58,8 @@ export default function TinyCodeShare() {
         }
     };
 
-    const toggleEditable = () => {
-        setIsEditable(!isEditable);
+    const toggleEditable = (checked: boolean) => {
+        setIsEditable(checked)
     };
 
     const toggleAutoDetect = () => {
@@ -80,7 +77,7 @@ export default function TinyCodeShare() {
           <div className="flex flex-col items-end relative">
               <div className="flex items-center space-x-4 mr-1">
                   <label className="inline-flex items-center cursor-pointer border border-black p-1">
-                      <input type="checkbox" onChange={toggleEditable} className="sr-only peer"/>
+                      <input type="checkbox" onChange={() => toggleEditable(!isEditable)} checked={isEditable} className="sr-only peer"/>
                       <div
                         className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                       <span className="ms-3 text-sm font-medium">Edit</span>
