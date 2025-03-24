@@ -24,19 +24,20 @@ export default function CodeDetector() {
     return new URLSearchParams(hash);
   };
 
-  const defaultHandleCode = (value?: string) => {
-    console.log('defaultHandleCode')
-    if (isEditable) {
-      const codeValue = value || ''
-      setCode(codeValue);
-      if (autoDetect) {
-        const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
-        setLanguage(detectedLang);
-      }
+  const handleSetOnChangeCodeCallback = (isEditable: boolean, autoDetect: boolean): ((value?: string) => void) => {
+    if (isEditable && autoDetect) {
+      return handleCodeChangeEditableAutoDetect;
+    } else if (isEditable && !autoDetect) {
+      return handleCodeChangeEditableNotAutoDetect;
+    } else if (!isEditable && autoDetect) {
+      return handleCodeChangeNotEditableAutoDetect;
+    } else {
+      return handleCodeChangeNotEditableNotAutoDetect;
     }
-  };
+  }
 
   const handleCodeChangeEditableAutoDetect = (value?: string) => {
+    console.log('handleCodeChangeEditableAutoDetect')
     const codeValue = value || ''
     setCode(codeValue);
     const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
@@ -44,14 +45,17 @@ export default function CodeDetector() {
   };
 
   const handleCodeChangeEditableNotAutoDetect = (value?: string) => {
+    console.log('handleCodeChangeEditable')
     setCode(value || '');
   };
 
   const handleCodeChangeNotEditableNotAutoDetect = (value?: string) => {
+    console.log('handleCodeChangeNotEditableNotAutoDetect')
     // Do nothing
   };
 
   const handleCodeChangeNotEditableAutoDetect = (value?: string) => {
+    console.log('handleCodeChangeNotEditableAutoDetect')
     // Do nothing
   };
 
@@ -63,7 +67,7 @@ export default function CodeDetector() {
   const [autoDetect, setAutoDetect] = useState(searchParams.get(SEARCH_PARAM_AUTO_DETECT) === "true");
   const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
 
-  const [onCodeChangeCallback, setOnChangeCodeCallback] = useState<(value?: string) => void>(() => defaultHandleCode);
+  const [onCodeChangeCallback, setOnChangeCodeCallback] = useState<(value?: string) => void>(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
 
   const createShareableURL = (pSearchParams: URLSearchParams ) => {
     return `${window.location.origin}#${pSearchParams}`
@@ -84,33 +88,20 @@ export default function CodeDetector() {
 
       navigator.clipboard.writeText(createShareableURL(searchParams))
           .then(() => {
-              console.log('Copied')
               setLinkCopied(true)
               showLinkCopied()
             }
           );
   };
 
-  const handleSetOnChangeCodeCallback = (isEditable: boolean, autoDetect: boolean) => {
-    if (isEditable && autoDetect) {
-      setOnChangeCodeCallback(() => handleCodeChangeEditableAutoDetect)
-    } else if (isEditable && !autoDetect) {
-      setOnChangeCodeCallback(() => handleCodeChangeEditableNotAutoDetect)
-    } else if (!isEditable && autoDetect) {
-      setOnChangeCodeCallback(() => handleCodeChangeNotEditableAutoDetect)
-    } else if (!isEditable && !autoDetect) {
-      setOnChangeCodeCallback(() => handleCodeChangeNotEditableNotAutoDetect)
-    }
-  }
-
   const toggleEditable = (event: ChangeEvent<HTMLInputElement>) => {
     setIsEditable(event.target.checked)
-    handleSetOnChangeCodeCallback(event.target.checked, autoDetect)
+    setOnChangeCodeCallback(() => handleSetOnChangeCodeCallback(event.target.checked, autoDetect));
   };
 
   const toggleAutoDetect = (event: ChangeEvent<HTMLInputElement>) => {
     setAutoDetect(event.target.checked);
-    handleSetOnChangeCodeCallback(isEditable, event.target.checked);
+    setOnChangeCodeCallback(() => handleSetOnChangeCodeCallback(isEditable, event.target.checked));
   };
 
   const MostUsedLangs = () => {
