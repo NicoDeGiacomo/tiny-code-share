@@ -8,8 +8,6 @@ import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
 
 
-const SEARCH_PARAM_IS_EDITABLE = "isEditable"
-const SEARCH_PARAM_AUTO_DETECT = "autoDetect"
 const SEARCH_PARAM_CODE = "code"
 const SEARCH_PARAM_LANG = "lang"
 
@@ -62,9 +60,11 @@ export default function CodeDetector() {
   const [linkCopied, setLinkCopied] = useState(false);
 
   const searchParams = getHashParams();
-  const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(searchParams.get(SEARCH_PARAM_CODE) ?? ''));
-  const [isEditable, setIsEditable] = useState(searchParams.get(SEARCH_PARAM_IS_EDITABLE) === "true");
-  const [autoDetect, setAutoDetect] = useState(searchParams.get(SEARCH_PARAM_AUTO_DETECT) === "true");
+  const codeParam = searchParams.get(SEARCH_PARAM_CODE);
+  const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(codeParam ?? ''));
+  // Automatically determine initial toggle states based on code presence
+  const [isEditable, setIsEditable] = useState(codeParam === null);
+  const [autoDetect, setAutoDetect] = useState(codeParam === null);
   const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
 
   const [onCodeChangeCallback, setOnChangeCodeCallback] = useState<(value?: string) => void>(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
@@ -83,8 +83,6 @@ export default function CodeDetector() {
       const searchParams = getHashParams();
       searchParams.set(SEARCH_PARAM_CODE, compressedCode)
       searchParams.set(SEARCH_PARAM_LANG, language)
-      searchParams.set(SEARCH_PARAM_IS_EDITABLE, isEditable.toString())
-      searchParams.set(SEARCH_PARAM_AUTO_DETECT, autoDetect.toString())
 
       navigator.clipboard.writeText(createShareableURL(searchParams))
           .then(() => {
