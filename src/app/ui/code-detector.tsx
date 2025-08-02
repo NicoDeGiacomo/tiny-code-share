@@ -2,7 +2,7 @@
 
 import {Editor} from "@monaco-editor/react";
 import LZString from "lz-string";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useState, useEffect} from "react";
 import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
@@ -14,6 +14,8 @@ const SEARCH_PARAM_LANG = "lang"
 const DEFAULT_LANGUAGE = "javascript"
 
 const VISIBLE_TIME = 3000;
+const LANGUAGE_DETECTION_DEBOUNCE = 600;
+const MIN_CHARS_FOR_DETECTION = 10;
 
 export default function CodeDetector() {
   
@@ -34,26 +36,28 @@ export default function CodeDetector() {
     }
   }
 
+  const detectLanguage = useDebouncedCallback((codeValue: string) => {
+    if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
+      const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
+      setLanguage(detectedLang);
+    }
+  }, LANGUAGE_DETECTION_DEBOUNCE);
+
   const handleCodeChangeEditableAutoDetect = (value?: string) => {
-    console.log('handleCodeChangeEditableAutoDetect')
     const codeValue = value || ''
     setCode(codeValue);
-    const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
-    setLanguage(detectedLang);
+    detectLanguage(codeValue);
   };
 
   const handleCodeChangeEditableNotAutoDetect = (value?: string) => {
-    console.log('handleCodeChangeEditable')
     setCode(value || '');
   };
 
-  const handleCodeChangeNotEditableNotAutoDetect = (_value?: string) => {
-    console.log('handleCodeChangeNotEditableNotAutoDetect')
+  const handleCodeChangeNotEditableNotAutoDetect = (value?: string) => {
     // Do nothing
   };
 
-  const handleCodeChangeNotEditableAutoDetect = (_value?: string) => {
-    console.log('handleCodeChangeNotEditableAutoDetect')
+  const handleCodeChangeNotEditableAutoDetect = (value?: string) => {
     // Do nothing
   };
 
@@ -68,13 +72,20 @@ export default function CodeDetector() {
   const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
 
   const [onCodeChangeCallback, setOnChangeCodeCallback] = useState<(value?: string) => void>(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
+  
+  // Initial language detection if code is present and autoDetect is enabled
+  useEffect(() => {
+    if (code && autoDetect && code.length >= MIN_CHARS_FOR_DETECTION) {
+      detectLanguage(code);
+    }
+  }, []);
 
   const createShareableURL = (pSearchParams: URLSearchParams ) => {
     return `${window.location.origin}#${pSearchParams}`
   }
 
   const showLinkCopied = useDebouncedCallback(() => {
-      setLinkCopied(false)
+    setLinkCopied(false)
   }, VISIBLE_TIME);
 
   const handleShare = () => {
