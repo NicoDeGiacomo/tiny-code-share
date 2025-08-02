@@ -47,12 +47,12 @@ export default function CodeDetector() {
     setCode(value || '');
   };
 
-  const handleCodeChangeNotEditableNotAutoDetect = (value?: string) => {
+  const handleCodeChangeNotEditableNotAutoDetect = (_value?: string) => {
     console.log('handleCodeChangeNotEditableNotAutoDetect')
     // Do nothing
   };
 
-  const handleCodeChangeNotEditableAutoDetect = (value?: string) => {
+  const handleCodeChangeNotEditableAutoDetect = (_value?: string) => {
     console.log('handleCodeChangeNotEditableAutoDetect')
     // Do nothing
   };
