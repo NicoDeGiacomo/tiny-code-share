@@ -156,7 +156,20 @@ export default function CodeDetector() {
                 height="80vh"
                 theme="vs-dark"
                 onChange={onCodeChangeCallback}
-                options={{readOnly: !isEditable}}
+                options={{
+                  readOnly: !isEditable,
+                  minimap: { enabled: false },
+                  folding: false,
+                  lineNumbers: 'on',
+                  wordWrap: 'on',
+                  automaticLayout: false,
+                  scrollBeyondLastLine: false,
+                  renderWhitespace: 'none',
+                  renderLineHighlight: 'line',
+                  formatOnPaste: false,
+                  guides: { indentation: false },
+                  smoothScrolling: true
+                }}
                 language={language}
                 value={code}
               />
