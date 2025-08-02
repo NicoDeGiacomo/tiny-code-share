@@ -53,11 +53,11 @@ export default function CodeDetector() {
     setCode(value || '');
   };
 
-  const handleCodeChangeNotEditableNotAutoDetect = (value?: string) => {
+  const handleCodeChangeNotEditableNotAutoDetect = () => {
     // Do nothing
   };
 
-  const handleCodeChangeNotEditableAutoDetect = (value?: string) => {
+  const handleCodeChangeNotEditableAutoDetect = () => {
     // Do nothing
   };
 
@@ -78,7 +78,7 @@ export default function CodeDetector() {
     if (code && autoDetect && code.length >= MIN_CHARS_FOR_DETECTION) {
       detectLanguage(code);
     }
-  }, []);
+  }, [code, autoDetect, detectLanguage]);
 
   const createShareableURL = (pSearchParams: URLSearchParams ) => {
     return `${window.location.origin}#${pSearchParams}`
