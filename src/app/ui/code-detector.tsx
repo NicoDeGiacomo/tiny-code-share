@@ -2,7 +2,7 @@
 
 import {Editor} from "@monaco-editor/react";
 import LZString from "lz-string";
-import {ChangeEvent, useState, useEffect, useCallback, useMemo} from "react";
+import {ChangeEvent, useState, useEffect, useCallback, useMemo, useReducer} from "react";
 import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
@@ -28,11 +28,63 @@ export default function CodeDetector() {
 
   const searchParams = useMemo(() => getHashParams(), [getHashParams]);
   const codeParam = useMemo(() => searchParams.get(SEARCH_PARAM_CODE), [searchParams]);
-  const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(codeParam ?? ''));
-  // Automatically determine initial toggle states based on code presence
-  const [isEditable, setIsEditable] = useState(codeParam === null);
-  const [autoDetect, setAutoDetect] = useState(codeParam === null);
-  const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
+  
+  // Define editor state reducer
+  type EditorState = {
+    code: string;
+    isEditable: boolean;
+    autoDetect: boolean;
+    language: string;
+  }
+  
+  type EditorAction = 
+    | { type: 'SET_CODE'; payload: string }
+    | { type: 'SET_EDITABLE'; payload: boolean }
+    | { type: 'SET_AUTO_DETECT'; payload: boolean }
+    | { type: 'SET_LANGUAGE'; payload: string };
+  
+  const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
+    switch (action.type) {
+      case 'SET_CODE':
+        return { ...state, code: action.payload };
+      case 'SET_EDITABLE':
+        return { ...state, isEditable: action.payload };
+      case 'SET_AUTO_DETECT':
+        return { ...state, autoDetect: action.payload };
+      case 'SET_LANGUAGE':
+        return { ...state, language: action.payload };
+      default:
+        return state;
+    }
+  };
+  
+  // Initialize editor state
+  const initialEditorState: EditorState = {
+    code: LZString.decompressFromEncodedURIComponent(codeParam ?? ''),
+    isEditable: codeParam === null,
+    autoDetect: codeParam === null,
+    language: searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE
+  };
+  
+  const [editorState, dispatchEditorState] = useReducer(editorReducer, initialEditorState);
+  const { code, isEditable, autoDetect, language } = editorState;
+  
+  // Create setter functions that use the reducer
+  const setCode = useCallback((newCode: string) => {
+    dispatchEditorState({ type: 'SET_CODE', payload: newCode });
+  }, []);
+  
+  const setIsEditable = useCallback((value: boolean) => {
+    dispatchEditorState({ type: 'SET_EDITABLE', payload: value });
+  }, []);
+  
+  const setAutoDetect = useCallback((value: boolean) => {
+    dispatchEditorState({ type: 'SET_AUTO_DETECT', payload: value });
+  }, []);
+  
+  const setLanguage = useCallback((value: string) => {
+    dispatchEditorState({ type: 'SET_LANGUAGE', payload: value });
+  }, []);
   
   const detectLanguage = useDebouncedCallback((codeValue: string) => {
     if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
