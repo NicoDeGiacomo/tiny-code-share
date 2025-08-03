@@ -2,7 +2,7 @@
 
 import {Editor} from "@monaco-editor/react";
 import LZString from "lz-string";
-import {ChangeEvent, useState, useEffect} from "react";
+import {ChangeEvent, useState, useEffect, useCallback, useMemo} from "react";
 import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
@@ -19,12 +19,48 @@ const MIN_CHARS_FOR_DETECTION = 10;
 
 export default function CodeDetector() {
   
-  const getHashParams = () => {
+  const getHashParams = useCallback(() => {
     const hash = window.location.hash.substring(1);
     return new URLSearchParams(hash);
-  };
+  }, []);
 
-  const handleSetOnChangeCodeCallback = (isEditable: boolean, autoDetect: boolean): ((value?: string) => void) => {
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const searchParams = useMemo(() => getHashParams(), [getHashParams]);
+  const codeParam = useMemo(() => searchParams.get(SEARCH_PARAM_CODE), [searchParams]);
+  const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(codeParam ?? ''));
+  // Automatically determine initial toggle states based on code presence
+  const [isEditable, setIsEditable] = useState(codeParam === null);
+  const [autoDetect, setAutoDetect] = useState(codeParam === null);
+  const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
+  
+  const detectLanguage = useDebouncedCallback((codeValue: string) => {
+    if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
+      const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
+      setLanguage(detectedLang);
+    }
+  }, LANGUAGE_DETECTION_DEBOUNCE);
+  
+  // Define handlers
+  const handleCodeChangeEditableAutoDetect = useCallback((value?: string) => {
+    const codeValue = value || ''
+    setCode(codeValue);
+    detectLanguage(codeValue);
+  }, [detectLanguage, setCode]);
+
+  const handleCodeChangeEditableNotAutoDetect = useCallback((value?: string) => {
+    setCode(value || '');
+  }, [setCode]);
+
+  const handleCodeChangeNotEditableNotAutoDetect = useCallback(() => {
+    // Do nothing
+  }, []);
+
+  const handleCodeChangeNotEditableAutoDetect = useCallback(() => {
+    // Do nothing
+  }, []);
+  
+  const handleSetOnChangeCodeCallback = useCallback((isEditable: boolean, autoDetect: boolean): ((value?: string) => void) => {
     if (isEditable && autoDetect) {
       return handleCodeChangeEditableAutoDetect;
     } else if (isEditable && !autoDetect) {
@@ -34,61 +70,40 @@ export default function CodeDetector() {
     } else {
       return handleCodeChangeNotEditableNotAutoDetect;
     }
-  }
+  }, [handleCodeChangeEditableAutoDetect, handleCodeChangeEditableNotAutoDetect, handleCodeChangeNotEditableAutoDetect, handleCodeChangeNotEditableNotAutoDetect]);
 
-  const detectLanguage = useDebouncedCallback((codeValue: string) => {
-    if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
-      const detectedLang = hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
-      setLanguage(detectedLang);
-    }
-  }, LANGUAGE_DETECTION_DEBOUNCE);
+  // Moved up to avoid circular dependencies
 
-  const handleCodeChangeEditableAutoDetect = (value?: string) => {
-    const codeValue = value || ''
-    setCode(codeValue);
-    detectLanguage(codeValue);
-  };
-
-  const handleCodeChangeEditableNotAutoDetect = (value?: string) => {
-    setCode(value || '');
-  };
-
-  const handleCodeChangeNotEditableNotAutoDetect = () => {
-    // Do nothing
-  };
-
-  const handleCodeChangeNotEditableAutoDetect = () => {
-    // Do nothing
-  };
-
-  const [linkCopied, setLinkCopied] = useState(false);
-
-  const searchParams = getHashParams();
-  const codeParam = searchParams.get(SEARCH_PARAM_CODE);
-  const [code, setCode] = useState(LZString.decompressFromEncodedURIComponent(codeParam ?? ''));
-  // Automatically determine initial toggle states based on code presence
-  const [isEditable, setIsEditable] = useState(codeParam === null);
-  const [autoDetect, setAutoDetect] = useState(codeParam === null);
-  const [language, setLanguage] = useState(searchParams.get(SEARCH_PARAM_LANG) || DEFAULT_LANGUAGE);
+  // Moved up to avoid circular dependencies
 
   const [onCodeChangeCallback, setOnChangeCodeCallback] = useState<(value?: string) => void>(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
   
+  // Initial language detection if code is present and autoDetect is enabled
   // Initial language detection if code is present and autoDetect is enabled
   useEffect(() => {
     if (code && autoDetect && code.length >= MIN_CHARS_FOR_DETECTION) {
       detectLanguage(code);
     }
   }, [code, autoDetect, detectLanguage]);
+  
+  // Make sure editor has proper size initially
+  useEffect(() => {
+    // Force layout recalculation after a short delay
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const createShareableURL = (pSearchParams: URLSearchParams ) => {
+  const createShareableURL = useCallback((pSearchParams: URLSearchParams ) => {
     return `${window.location.origin}#${pSearchParams}`
-  }
+  }, []);
 
   const showLinkCopied = useDebouncedCallback(() => {
     setLinkCopied(false)
   }, VISIBLE_TIME);
 
-  const handleShare = () => {
+  const handleShare = useCallback(() => {
       const compressedCode = LZString.compressToEncodedURIComponent(code);
 
       const searchParams = getHashParams();
@@ -101,25 +116,33 @@ export default function CodeDetector() {
               showLinkCopied()
             }
           );
-  };
+  }, [code, language, getHashParams, createShareableURL, setLinkCopied, showLinkCopied]);
 
-  const toggleEditable = (event: ChangeEvent<HTMLInputElement>) => {
+  const toggleEditable = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setIsEditable(event.target.checked)
     setOnChangeCodeCallback(() => handleSetOnChangeCodeCallback(event.target.checked, autoDetect));
-  };
+  }, [autoDetect, handleSetOnChangeCodeCallback, setIsEditable, setOnChangeCodeCallback]);
 
-  const toggleAutoDetect = (event: ChangeEvent<HTMLInputElement>) => {
+  const toggleAutoDetect = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setAutoDetect(event.target.checked);
     setOnChangeCodeCallback(() => handleSetOnChangeCodeCallback(isEditable, event.target.checked));
-  };
+  }, [isEditable, handleSetOnChangeCodeCallback, setAutoDetect, setOnChangeCodeCallback]);
 
-  const MostUsedLangs = () => {
-    return <>                
+  const mostUsedLanguages = useMemo(() => (
+    <>                
       <option>javascript</option>
       <option>python</option>
       <option>java</option>
     </>
-  }
+  ), []);
+  
+  const languageOptions = useMemo(() => 
+    hljs.listLanguages().map(lang => (
+      <option key={lang} value={lang}>
+        {lang}
+      </option>
+    )
+  ), []);
 
   return (
     <>
@@ -141,14 +164,8 @@ export default function CodeDetector() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               disabled={autoDetect}>
-                <MostUsedLangs/>
-                {hljs.listLanguages().map(
-                  (lang) => (
-                    <option key={lang} value={lang}>
-                        {lang}
-                    </option>
-                  )
-                )}
+                {mostUsedLanguages}
+                {languageOptions}
               </select>
           </div>
           <div className="w-full h-full p-1">
@@ -162,13 +179,18 @@ export default function CodeDetector() {
                   folding: false,
                   lineNumbers: 'on',
                   wordWrap: 'on',
-                  automaticLayout: false,
+                  automaticLayout: true,
                   scrollBeyondLastLine: false,
                   renderWhitespace: 'none',
                   renderLineHighlight: 'line',
                   formatOnPaste: false,
                   guides: { indentation: false },
-                  smoothScrolling: true
+                  smoothScrolling: true,
+                  quickSuggestions: false,
+                  suggestOnTriggerCharacters: false,
+                  parameterHints: { enabled: false },
+                  suggest: { showWords: false, showSnippets: false, showMethods: false, showFunctions: false },
+                  hover: { enabled: false }
                 }}
                 language={language}
                 value={code}
