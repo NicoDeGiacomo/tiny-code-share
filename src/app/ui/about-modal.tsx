@@ -47,7 +47,7 @@ export default function AboutModal() {
                                 <p className="my-2">
                                     Your code snippets are <span className="font-bold">never logged or stored</span> on any backend. 
                                     Everything happens client-side in your browser, ensuring your code remains private and secure.
-                                    We don't track, store, or analyze your code in any way.
+                                    We don&apos;t track, store, or analyze your code in any way.
                                 </p>
                                 
                                 <h4 className="text-lg font-medium mt-3">2. Fast & Straightforward</h4>
@@ -60,7 +60,7 @@ export default function AboutModal() {
                                 <p className="my-2">
                                     Tiny Code Share uses URL fragment identifiers (the part after the # in the URL) 
                                     to store and share your code. This means your code never leaves your browser 
-                                    when you create a share, and it's never sent to our servers when someone views it.
+                                    when you create a share, and it&apos;s never sent to our servers when someone views it.
                                 </p>
                                 
                                 <h3 className="text-xl font-semibold mt-4">Open Source</h3>

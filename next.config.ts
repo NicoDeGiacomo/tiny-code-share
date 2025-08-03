@@ -50,7 +50,6 @@ const nextConfig: NextConfig = {
   
   // Configure production build optimizations
   productionBrowserSourceMaps: false,
-  swcMinify: true,
 };
 
 export default nextConfig;
