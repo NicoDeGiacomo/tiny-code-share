@@ -6,6 +6,7 @@ import {ChangeEvent, useState, useEffect, useCallback, useMemo, useReducer} from
 import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
+import AboutModal from "@/app/ui/about-modal";
 
 
 const SEARCH_PARAM_CODE = "code"
@@ -198,8 +199,12 @@ export default function CodeDetector() {
 
   return (
     <>
-      <div className="flex flex-col items-end relative">
-          <div className="flex items-center space-x-4 mr-1">
+      <div className="flex flex-col relative">
+          <div className="flex items-center justify-between w-full px-1">
+            <div className="flex-shrink-0">
+              <AboutModal />
+            </div>
+            <div className="flex items-center space-x-4">
               <label className="inline-flex items-center cursor-pointer border border-black p-1">
                   <input type="checkbox" onChange={toggleEditable} checked={isEditable} className="sr-only peer"/>
                   <div
@@ -219,6 +224,7 @@ export default function CodeDetector() {
                 {mostUsedLanguages}
                 {languageOptions}
               </select>
+            </div>
           </div>
           <div className="w-full h-full p-1">
               <Editor
@@ -248,7 +254,7 @@ export default function CodeDetector() {
                 value={code}
               />
           </div>
-          <div className="flex items-center gap-2 m-2">
+          <div className="flex items-center justify-end gap-2 m-2">
               <p className={cn('text-green-600', {'hidden': !linkCopied})}>Link copied to clipboard!</p>
               <button
                 onClick={handleShare}
