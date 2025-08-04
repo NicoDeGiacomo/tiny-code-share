@@ -37,7 +37,7 @@ const defaultSocialLinks: SocialLink[] = [
 
 export default function SocialModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(defaultSocialLinks);
+  const [socialLinks, _] = useState<SocialLink[]>(defaultSocialLinks);
 
   return (
     <div className="flex items-center gap-3 relative">

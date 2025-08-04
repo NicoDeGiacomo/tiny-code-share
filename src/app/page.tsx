@@ -1,4 +1,3 @@
-import Link from "next/link";
 import NoSSRCodeDetector from "./ui/no-ssr-code-detector";
 
 export default function TinyCodeShare() {
