@@ -7,6 +7,7 @@ import hljs from "highlight.js";
 import {cn} from "@/app/utils";
 import {useDebouncedCallback} from "use-debounce";
 import AboutModal from "@/app/ui/about-modal";
+import SocialModal from "@/app/ui/social-modal";
 
 
 const SEARCH_PARAM_CODE = "code"
@@ -254,14 +255,19 @@ export default function CodeDetector() {
                 value={code}
               />
           </div>
-          <div className="flex items-center justify-end gap-2 m-2">
-              <p className={cn('text-green-600', {'hidden': !linkCopied})}>Link copied to clipboard!</p>
-              <button
-                onClick={handleShare}
-                className="h-8 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium text-sm px-5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-              >
-                  Generate Code Link
-              </button>
+          <div className="flex items-center justify-between gap-2 m-2">
+              <div>
+                <SocialModal />
+              </div>
+              <div className="flex items-center gap-2">
+                <p className={cn('text-green-600', {'hidden': !linkCopied})}>Link copied to clipboard!</p>
+                <button
+                  onClick={handleShare}
+                  className="h-8 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium text-sm px-5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                >
+                    Generate Link
+                </button>
+              </div>
           </div>
 
       </div>

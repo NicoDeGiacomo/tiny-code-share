@@ -70,7 +70,7 @@
 
 1. **Write or Paste Code**: Enter your code in the editor
 2. **Optional Language Selection**: Choose a language or let the app detect it automatically
-3. **Generate Link**: Click "Generate Code Link" and share the URL with others
+3. **Generate Link**: Click "Generate Link" and share the URL with others
 4. **Privacy Preserved**: The code is compressed and stored in the URL fragment (after the #), never sent to our servers
 
 ## 🌎 Deployment
