@@ -207,21 +207,33 @@ export default function CodeDetector() {
             </div>
             <div className="flex items-center space-x-4">
               <label className="inline-flex items-center cursor-pointer border border-black p-1">
-                  <input type="checkbox" onChange={toggleEditable} checked={isEditable} className="sr-only peer"/>
+                  <input 
+                    aria-label="Toggle edit mode"
+                    type="checkbox" 
+                    onChange={toggleEditable} 
+                    checked={isEditable} 
+                    className="sr-only peer"/>
                   <div
                     className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                   <span className="ms-3 text-sm font-medium">Edit</span>
               </label>
               <label className="inline-flex items-center cursor-pointer border border-black p-1">
-                  <input type="checkbox" onChange={toggleAutoDetect} checked={autoDetect} className="sr-only peer"/>
+                  <input 
+                    aria-label="Toggle language detection"
+                    type="checkbox" 
+                    onChange={toggleAutoDetect} 
+                    checked={autoDetect} 
+                    className="sr-only peer"/>
                   <div
                     className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                   <span className="ms-3 text-sm font-medium">Detect</span>
               </label>
-              <select className={cn("border border-black p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed")} 
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              disabled={autoDetect}>
+              <select 
+                aria-label="Select programming language"
+                className={cn("border border-black p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed")} 
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                disabled={autoDetect}>
                 {mostUsedLanguages}
                 {languageOptions}
               </select>
