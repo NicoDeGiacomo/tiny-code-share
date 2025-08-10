@@ -206,8 +206,10 @@ export default function CodeDetector() {
               <AboutModal />
             </div>
             <div className="flex items-center space-x-4">
-              <label className="inline-flex items-center cursor-pointer border border-black p-1">
+              <label className="inline-flex items-center cursor-pointer border border-black p-1" htmlFor="edit-toggle">
                   <input 
+                    id="edit-toggle"
+                    name="edit-toggle"
                     aria-label="Toggle edit mode"
                     type="checkbox" 
                     onChange={toggleEditable} 
@@ -217,8 +219,10 @@ export default function CodeDetector() {
                     className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                   <span className="ms-3 text-sm font-medium">Edit</span>
               </label>
-              <label className="inline-flex items-center cursor-pointer border border-black p-1">
+              <label className="inline-flex items-center cursor-pointer border border-black p-1" htmlFor="detect-toggle">
                   <input 
+                    id="detect-toggle"
+                    name="detect-toggle"
                     aria-label="Toggle language detection"
                     type="checkbox" 
                     onChange={toggleAutoDetect} 
@@ -229,6 +233,8 @@ export default function CodeDetector() {
                   <span className="ms-3 text-sm font-medium">Detect</span>
               </label>
               <select 
+                id="language-selector"
+                name="language-selector"
                 aria-label="Select programming language"
                 className={cn("border border-black p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed")} 
                 value={language}

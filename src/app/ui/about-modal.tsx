@@ -34,7 +34,7 @@ export default function AboutModal() {
                             <h2 className="text-3xl font-bold mb-4">About Tiny Code Share</h2>
 
                             <div className="prose prose-sm max-w-none">
-                                <h3 className="text-xl font-semibold">Our Mission</h3>
+                                <h3 className="text-xl font-semibold">The Mission</h3>
                                 <p className="my-2">
                                     Tiny Code Share was created with a simple philosophy in mind: code sharing should be
                                     <span className="font-bold"> fast, private, and straightforward</span>.
@@ -46,7 +46,7 @@ export default function AboutModal() {
                                 <p className="my-2">
                                     Your code snippets are <span className="font-bold">never logged or stored</span> on any backend.
                                     Everything happens client-side in your browser, ensuring your code remains private and secure.
-                                    We don&apos;t track, store, or analyze your code in any way.
+                                    Your code is never tracked, stored, or analyzed in any way.
                                 </p>
 
                                 <h4 className="text-lg font-medium mt-3">2. Fast & Straightforward</h4>
@@ -59,15 +59,12 @@ export default function AboutModal() {
                                 <p className="my-2">
                                     Tiny Code Share uses URL fragment identifiers (the part after the # in the URL)
                                     to store and share your code. This means your code never leaves your browser
-                                    when you create a share, and it&apos;s never sent to our servers when someone views it.
+                                    when you create a share, and it&apos;s never sent to a server when someone views it.
                                 </p>
 
                                 <h3 className="text-xl font-semibold mt-4">Open Source</h3>
                                 <p className="my-2">
-                                    Tiny Code Share is completely open source. You can view the code, contribute, or fork the project on
-                                    <a href="https://github.com/NicoDeGiacomo/tiny-code-share" className="text-blue-600 hover:underline ml-1">
-                                        GitHub
-                                    </a>.
+                                    Tiny Code Share is completely open source. You can view the code, contribute, or fork the project on <a href="https://github.com/NicoDeGiacomo/tiny-code-share" className="text-blue-600 hover:underline ml-1">GitHub</a>.
                                 </p>
                             </div>
                         </div>
