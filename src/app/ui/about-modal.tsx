@@ -6,10 +6,10 @@ export default function AboutModal() {
   return (
     <div className="flex flex-col items-start relative">
       <button
-        className="inline-flex items-center cursor-pointer border border-black p-1"
+        className="inline-flex items-center cursor-pointer border border-black p-2 sm:p-1 min-h-[44px] sm:min-h-0"
         onClick={() => setIsOpen(true)}
       >
-        <span className="mr-1 ml-1 text-sm font-medium">About</span>
+        <span className="mr-1 ml-1 text-base sm:text-sm font-medium">About</span>
       </button>
 
       <div>

@@ -262,13 +262,13 @@ export default function CodeDetector() {
   return (
     <>
       <div className="flex flex-col relative">
-        <div className="flex items-center justify-between w-full px-1">
-          <div className="flex-shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full px-1 gap-2 sm:gap-0">
+          <div className="flex-shrink-0 order-2 sm:order-1">
             <AboutModal />
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 order-1 sm:order-2">
             <label
-              className="inline-flex items-center cursor-pointer border border-black p-1"
+              className="inline-flex items-center cursor-pointer border border-black p-2 sm:p-1 min-h-[44px] sm:min-h-0"
               htmlFor="edit-toggle"
             >
               <input
@@ -280,11 +280,11 @@ export default function CodeDetector() {
                 checked={isEditable}
                 className="sr-only peer"
               />
-              <div className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-              <span className="ms-3 text-sm font-medium">Edit</span>
+              <div className="relative w-11 h-6 sm:w-9 sm:h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 sm:after:h-4 sm:after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+              <span className="ms-3 text-base sm:text-sm font-medium">Edit</span>
             </label>
             <label
-              className="inline-flex items-center cursor-pointer border border-black p-1"
+              className="inline-flex items-center cursor-pointer border border-black p-2 sm:p-1 min-h-[44px] sm:min-h-0"
               htmlFor="detect-toggle"
             >
               <input
@@ -296,15 +296,15 @@ export default function CodeDetector() {
                 checked={autoDetect}
                 className="sr-only peer"
               />
-              <div className="relative w-9 h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-              <span className="ms-3 text-sm font-medium">Detect</span>
+              <div className="relative w-11 h-6 sm:w-9 sm:h-5 bg-gray-200 rounded-full dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 sm:after:h-4 sm:after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+              <span className="ms-3 text-base sm:text-sm font-medium">Detect</span>
             </label>
             <select
               id="language-selector"
               name="language-selector"
               aria-label="Select programming language"
               className={cn(
-                'border border-black p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed'
+                'border border-black p-2 sm:p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-base sm:text-sm min-h-[44px] sm:min-h-0 w-full sm:w-auto'
               )}
               value={language}
               onChange={e => setLanguage(e.target.value)}
@@ -317,7 +317,7 @@ export default function CodeDetector() {
         </div>
         <div className="w-full h-full p-1">
           <Editor
-            height="80vh"
+            height="calc(100vh - 200px)"
             theme="vs-dark"
             onChange={onCodeChangeCallback}
             options={{
@@ -348,17 +348,17 @@ export default function CodeDetector() {
             value={code}
           />
         </div>
-        <div className="flex items-center justify-between gap-2 m-2">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 m-2">
+          <div className="order-2 sm:order-1">
             <SocialModal />
           </div>
-          <div className="flex items-center gap-2">
-            <p className={cn('text-green-600', { hidden: !linkCopied })}>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 order-1 sm:order-2">
+            <p className={cn('text-green-600 text-center sm:text-left', { hidden: !linkCopied })}>
               Link copied to clipboard!
             </p>
             <button
               onClick={handleShare}
-              className="h-8 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium text-sm px-5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+              className="h-12 sm:h-8 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium text-base sm:text-sm px-5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 w-full sm:w-auto"
             >
               Generate Link
             </button>
