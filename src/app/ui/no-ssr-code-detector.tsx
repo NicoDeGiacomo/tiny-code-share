@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
@@ -6,8 +6,8 @@ import { Suspense } from 'react';
 // Dynamic import without redundant loading screen
 const CodeDetector = dynamic(
   () => import('../ui/code-detector').then(mod => ({ default: mod.default })),
-  { 
-    ssr: false
+  {
+    ssr: false,
   }
 );
 

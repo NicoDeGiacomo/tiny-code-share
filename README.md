@@ -35,18 +35,20 @@
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm, yarn, or pnpm
 
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/NicoDeGiacomo/tiny-code-share.git
    cd tiny-code-share
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    # or
@@ -56,6 +58,7 @@
    ```
 
 3. Run the development server:
+
    ```bash
    npm run dev
    # or
@@ -100,4 +103,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 - [highlight.js](https://highlightjs.org/)
 - [LZ-String](https://github.com/pieroxy/lz-string)
-
