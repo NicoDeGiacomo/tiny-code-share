@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: 'Tiny Code Share',
   description:
     'Tiny Code Share is an open source project to share snippets of code without the need for storage and a backend.',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
