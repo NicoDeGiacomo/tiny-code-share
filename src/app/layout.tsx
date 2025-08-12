@@ -17,7 +17,12 @@ export const metadata: Metadata = {
   description:
     'Tiny Code Share is an open source project to share snippets of code without the need for storage and a backend.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      {
+        url: '/favicon.ico',
+        sizes: 'any',
+      },
+    ],
     shortcut: '/favicon.ico',
     apple: '/favicon.ico',
   },
