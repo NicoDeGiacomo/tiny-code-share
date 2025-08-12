@@ -188,6 +188,28 @@ export default function CodeDetector() {
     setLinkCopied(false);
   }, VISIBLE_TIME);
 
+  // Fallback clipboard function for mobile browsers
+  const fallbackCopyToClipboard = useCallback((text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return successful;
+    } catch (err) {
+      document.body.removeChild(textArea);
+      console.error('Fallback clipboard copy failed:', err);
+      return false;
+    }
+  }, []);
+
   const handleShare = useCallback(() => {
     const compressedCode = LZString.compressToEncodedURIComponent(code);
 
@@ -195,10 +217,37 @@ export default function CodeDetector() {
     searchParams.set(SEARCH_PARAM_CODE, compressedCode);
     searchParams.set(SEARCH_PARAM_LANG, language);
 
-    navigator.clipboard.writeText(createShareableURL(searchParams)).then(() => {
-      setLinkCopied(true);
-      showLinkCopied();
-    });
+    const shareableURL = createShareableURL(searchParams);
+
+    // Try modern clipboard API first, fallback to legacy method
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareableURL)
+        .then(() => {
+          setLinkCopied(true);
+          showLinkCopied();
+        })
+        .catch((err) => {
+          console.warn('Modern clipboard API failed, trying fallback:', err);
+          const success = fallbackCopyToClipboard(shareableURL);
+          if (success) {
+            setLinkCopied(true);
+            showLinkCopied();
+          } else {
+            // If all clipboard methods fail, show the URL to the user
+            alert(`Copy this link:\n${shareableURL}`);
+          }
+        });
+    } else {
+      // Use fallback method directly if modern API is not available
+      const success = fallbackCopyToClipboard(shareableURL);
+      if (success) {
+        setLinkCopied(true);
+        showLinkCopied();
+      } else {
+        // If fallback also fails, show the URL to the user
+        alert(`Copy this link:\n${shareableURL}`);
+      }
+    }
   }, [
     code,
     language,
@@ -206,6 +255,7 @@ export default function CodeDetector() {
     createShareableURL,
     setLinkCopied,
     showLinkCopied,
+    fallbackCopyToClipboard,
   ]);
 
   const toggleEditable = useCallback(
