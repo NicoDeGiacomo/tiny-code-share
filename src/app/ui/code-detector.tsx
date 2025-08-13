@@ -367,7 +367,7 @@ export default function CodeDetector() {
         </div>
         <div className="w-full h-full p-1">
           <Editor
-            height="calc(100vh - 200px)"
+            height="calc(100vh - 270px)"
             theme="vs-dark"
             onChange={onCodeChangeCallback}
             options={{
