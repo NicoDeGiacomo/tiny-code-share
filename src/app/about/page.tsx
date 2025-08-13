@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'About - Privacy-First Code Sharing Tool',
@@ -82,7 +83,7 @@ export default function About() {
           <p className="text-gray-700 mb-4">Built with modern web technologies for optimal performance:</p>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li><strong>Next.js 15</strong> - React framework for production</li>
-            <li><strong>Monaco Editor</strong> - VS Code's editor for the web</li>
+            <li><strong>Monaco Editor</strong> - VS Code&apos;s editor for the web</li>
             <li><strong>highlight.js</strong> - Syntax highlighting for 200+ languages</li>
             <li><strong>LZ-String</strong> - Efficient compression for URL storage</li>
             <li><strong>Tailwind CSS</strong> - Utility-first CSS framework</li>
@@ -110,12 +111,12 @@ export default function About() {
 
       <footer className="mt-12 pt-8 border-t border-gray-200">
         <div className="text-center">
-          <a 
+          <Link 
             href="/" 
             className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Start Sharing Code →
-          </a>
+          </Link>
         </div>
       </footer>
     </main>

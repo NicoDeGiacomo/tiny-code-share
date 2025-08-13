@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Features - Complete Code Sharing Solution',
@@ -34,10 +35,7 @@ export default function Features() {
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
               <h3 className="font-semibold text-lg mb-3 text-green-800">No Data Collection</h3>
-              <p className="text-green-700">
-                We don't collect, store, or track any personal information. No analytics, 
-                no cookies, no user profiles.
-              </p>
+              <p className="text-gray-600">Your code isn&apos;t stored on our servers - it&apos;s encoded directly in the URL for maximum privacy.</p>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
               <h3 className="font-semibold text-lg mb-3 text-green-800">URL Fragment Security</h3>
@@ -310,12 +308,12 @@ export default function Features() {
           <p className="text-gray-600 mb-6">
             Experience the fastest, most private way to share code snippets.
           </p>
-          <a 
+          <Link 
             href="/" 
-            className="inline-block bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            Try Tiny Code Share →
-          </a>
+            Try It Now →
+          </Link>
         </div>
       </footer>
     </main>

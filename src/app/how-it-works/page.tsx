@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'How It Works - URL Fragment Code Sharing Technology',
@@ -46,8 +47,7 @@ export default function HowItWorks() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">Code Input</h3>
-                <p className="text-gray-700">
-                  You paste or type your code into the Monaco editor (the same editor used in VS Code). 
+                <p className="text-gray-700">The URL fragment isn&apos;t sent to servers during navigation, keeping your code completely private. The Monaco editor (the same editor used in VS Code). 
                   The editor provides syntax highlighting and language detection.
                 </p>
               </div>
@@ -72,9 +72,7 @@ export default function HowItWorks() {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-2">URL Encoding</h3>
-                <p className="text-gray-700">
-                  The compressed code is encoded into a URL-safe format and placed in the URL fragment. 
-                  This happens entirely in your browser using JavaScript.
+                <p className="text-gray-700">Your code is compressed and encoded directly into the URL&apos;s fragment (the part after #), ensuring maximum privacy. This happens entirely in your browser using JavaScript.
                 </p>
               </div>
             </div>
@@ -146,7 +144,7 @@ export default function HowItWorks() {
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <h3 className="font-semibold mb-2">⚡ No Backend Required</h3>
               <p className="text-gray-700">
-                Since everything happens client-side, there's no need for databases, user accounts, 
+                Since everything happens client-side, there&apos;s no need for databases, user accounts, 
                 or server-side processing. This keeps the service simple and fast.
               </p>
             </div>
@@ -168,7 +166,7 @@ export default function HowItWorks() {
               <p className="text-gray-700">
                 While compression helps significantly, very large code files may create URLs that 
                 exceed browser limits (typically 2,000-8,000 characters). For most code snippets, 
-                this isn't an issue.
+                this isn&apos;t an issue.
               </p>
             </div>
             <div>
@@ -215,12 +213,12 @@ export default function HowItWorks() {
 
       <footer className="mt-12 pt-8 border-t border-gray-200">
         <div className="text-center">
-          <a 
+          <Link 
             href="/" 
             className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            Try It Now →
-          </a>
+            Start Sharing Code →
+          </Link>
         </div>
       </footer>
     </main>

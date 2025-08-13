@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - No Data Collection, Complete Privacy',
@@ -15,7 +16,7 @@ export default function Privacy() {
       <header className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4">Privacy Policy</h1>
         <p className="text-lg text-gray-600">
-          Your privacy is our priority. Here's exactly what we do and don't collect.
+          Your privacy is our priority. Here&apos;s exactly what we do and don&apos;t collect.
         </p>
       </header>
 
@@ -34,30 +35,30 @@ export default function Privacy() {
         <div>
           <h2 className="text-2xl font-semibold mb-4">How It Works</h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Tiny Code Share uses a unique approach called "URL fragment storage" to ensure complete privacy:
+            Tiny Code Share uses a unique approach called &quot;URL fragment storage&quot; to ensure complete privacy:
           </p>
           <ol className="list-decimal list-inside space-y-3 text-gray-700">
             <li>
-              <strong>Your code stays in your browser:</strong> When you paste code, it's processed entirely 
+              <strong>Processed client-side:</strong> When you paste code, it&apos;s processed entirely 
               client-side using JavaScript.
             </li>
             <li>
               <strong>Compressed and encoded:</strong> Your code is compressed using LZ-String and encoded 
-              into the URL fragment (the part after #).
+              into the URL&apos;s fragment (the part after the # symbol).
             </li>
             <li>
               <strong>Shared via URL:</strong> The shareable link contains your code in the URL fragment, 
               which never gets sent to any server.
             </li>
             <li>
-              <strong>Decoded in recipient's browser:</strong> When someone opens your link, their browser 
+              <strong>Decoded in recipient&apos;s browser:</strong> When someone opens your link, their browser 
               decodes the code from the URL fragment.
             </li>
           </ol>
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold mb-4">What We Don't Collect</h2>
+          <h2 className="text-2xl font-semibold mb-4">What We Don&apos;t Collect</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-lg mb-2">Personal Information</h3>
@@ -114,6 +115,9 @@ export default function Privacy() {
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
             <li>
+              <strong>Never sent to servers:</strong> URL fragments aren&apos;t transmitted to web servers during normal HTTP requests, so your code doesn&apos;t leave your device.
+            </li>
+            <li>
               <strong>Vercel (Hosting):</strong> Static file hosting with no server-side processing. 
               Standard web server logs may apply.
             </li>
@@ -129,9 +133,9 @@ export default function Privacy() {
             Since we collect no data about you:
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-700">
-            <li>There's no data to access, modify, or delete</li>
+            <li>There&apos;s no data to access, modify, or delete</li>
             <li>There are no accounts to manage</li>
-            <li>There's no personal information to port</li>
+            <li>There&apos;s no personal information to port</li>
             <li>There are no privacy settings to configure</li>
           </ul>
         </div>
@@ -139,10 +143,10 @@ export default function Privacy() {
         <div>
           <h2 className="text-2xl font-semibold mb-4">Security</h2>
           <p className="text-gray-700 leading-relaxed">
-            While we don't store your code, we recommend being cautious when sharing sensitive information:
+            While we don&apos;t store your code, we recommend being cautious when sharing sensitive information:
           </p>
           <ul className="list-disc list-inside space-y-2 text-gray-700 mt-4">
-            <li>Don't share API keys, passwords, or secrets</li>
+            <li>Don&apos;t share API keys, passwords, or secrets</li>
             <li>Be mindful of proprietary code</li>
             <li>Consider the audience who will have access to your shared link</li>
             <li>Remember that URLs can be logged by browsers, proxies, or other services</li>
@@ -165,12 +169,12 @@ export default function Privacy() {
 
       <footer className="mt-12 pt-8 border-t border-gray-200">
         <div className="text-center">
-          <a 
+          <Link 
             href="/" 
             className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Start Sharing Code →
-          </a>
+          </Link>
         </div>
       </footer>
     </main>
