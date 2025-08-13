@@ -382,7 +382,10 @@ export default function CodeDetector() {
               renderLineHighlight: 'line',
               formatOnPaste: false,
               guides: { indentation: false },
-              smoothScrolling: true,
+              smoothScrolling: false,
+              scrollbar: {
+                alwaysConsumeMouseWheel: false,
+              },
               quickSuggestions: false,
               suggestOnTriggerCharacters: false,
               parameterHints: { enabled: false },
