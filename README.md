@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Tiny Code Share Logo](https://github.com/NicoDeGiacomo/tiny-code-share/raw/main/src/app/favicon.ico)
+![Tiny Code Share Logo](https://github.com/NicoDeGiacomo/tiny-code-share/blob/main/public/og-image.png)
 
 **Share code snippets instantly with privacy in mind.**
 
