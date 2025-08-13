@@ -19,6 +19,35 @@ export default function TinyCodeShare() {
       
       <hr className="border-black mt-2" />
       
+      <nav className="mt-6 mb-4" aria-label="Additional information">
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
+          <a 
+            href="/about" 
+            className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+          >
+            About
+          </a>
+          <a 
+            href="/features" 
+            className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+          >
+            Features
+          </a>
+          <a 
+            href="/how-it-works" 
+            className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+          >
+            How It Works
+          </a>
+          <a 
+            href="/privacy" 
+            className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+          >
+            Privacy Policy
+          </a>
+        </div>
+      </nav>
+
       <footer className="mt-4 text-center">
         <div className="text-xs sm:text-sm text-gray-500 space-y-1">
           <p>
