@@ -105,11 +105,13 @@ export default function CodeDetector() {
   }, []);
 
   // Language detection optimization state
-  const [languageDetectionCache, setLanguageDetectionCache] = useState<{
+  type LanguageDetectionCache = {
     detectedLanguage: string;
     consecutiveCount: number;
     skipCount: number;
-  }>({
+  };
+
+  const [languageDetectionCache, setLanguageDetectionCache] = useState<LanguageDetectionCache>({
     detectedLanguage: '',
     consecutiveCount: 0,
     skipCount: 0,
@@ -117,24 +119,23 @@ export default function CodeDetector() {
 
   const detectLanguage = useDebouncedCallback((codeValue: string) => {
     if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
-      if (languageDetectionCache.skipCount > 0) {
-        setLanguageDetectionCache(prev => ({
-          ...prev,
-          skipCount: prev.skipCount - 1,
-        }));
-        
-        if (languageDetectionCache.detectedLanguage) {
-          setLanguage(languageDetectionCache.detectedLanguage);
-        }
-        return;
-      }
-
-      const detectedLang =
-        hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
-      
-      setLanguage(detectedLang);
-      
       setLanguageDetectionCache(prev => {
+        // If skipCount > 0, decrement and use cached detectedLanguage
+        if (prev.skipCount > 0) {
+          if (prev.detectedLanguage) {
+            setLanguage(prev.detectedLanguage);
+          }
+          return {
+            ...prev,
+            skipCount: prev.skipCount - 1,
+          };
+        }
+
+        const detectedLang =
+          hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
+        
+        setLanguage(detectedLang);
+        
         if (prev.detectedLanguage === detectedLang) {
           const newCount = prev.consecutiveCount + 1;
           
@@ -215,7 +216,6 @@ export default function CodeDetector() {
     (value?: string) => void
   >(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
 
-  // Initial language detection if code is present and autoDetect is enabled
   // Initial language detection if code is present and autoDetect is enabled
   useEffect(() => {
     if (code && autoDetect && code.length >= MIN_CHARS_FOR_DETECTION) {
