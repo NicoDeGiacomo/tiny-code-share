@@ -24,6 +24,8 @@ const DEFAULT_LANGUAGE = 'javascript';
 const VISIBLE_TIME = 3000;
 const LANGUAGE_DETECTION_DEBOUNCE = 600;
 const MIN_CHARS_FOR_DETECTION = 10;
+const LANGUAGE_CACHE_SIZE = 10;
+const LANGUAGE_SKIP_SIZE = 10;
 
 export default function CodeDetector() {
   const getHashParams = useCallback(() => {
@@ -102,11 +104,62 @@ export default function CodeDetector() {
     dispatchEditorState({ type: 'SET_LANGUAGE', payload: value });
   }, []);
 
+  // Language detection optimization state
+  type LanguageDetectionCache = {
+    detectedLanguage: string;
+    consecutiveCount: number;
+    skipCount: number;
+  };
+
+  const [languageDetectionCache, setLanguageDetectionCache] = useState<LanguageDetectionCache>({
+    detectedLanguage: '',
+    consecutiveCount: 0,
+    skipCount: 0,
+  });
+
   const detectLanguage = useDebouncedCallback((codeValue: string) => {
     if (codeValue.length >= MIN_CHARS_FOR_DETECTION) {
-      const detectedLang =
-        hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
-      setLanguage(detectedLang);
+      setLanguageDetectionCache(prev => {
+        // If skipCount > 0, decrement and use cached detectedLanguage
+        if (prev.skipCount > 0) {
+          if (prev.detectedLanguage) {
+            setLanguage(prev.detectedLanguage);
+          }
+          return {
+            ...prev,
+            skipCount: prev.skipCount - 1,
+          };
+        }
+
+        const detectedLang =
+          hljs.highlightAuto(codeValue).language || DEFAULT_LANGUAGE;
+        
+        setLanguage(detectedLang);
+        
+        if (prev.detectedLanguage === detectedLang) {
+          const newCount = prev.consecutiveCount + 1;
+          
+          if (newCount >= LANGUAGE_CACHE_SIZE) {
+            return {
+              detectedLanguage: detectedLang,
+              consecutiveCount: newCount,
+              skipCount: LANGUAGE_SKIP_SIZE,
+            };
+          }
+          
+          return {
+            detectedLanguage: detectedLang,
+            consecutiveCount: newCount,
+            skipCount: 0,
+          };
+        } else {
+          return {
+            detectedLanguage: detectedLang,
+            consecutiveCount: 1,
+            skipCount: 0,
+          };
+        }
+      });
     }
   }, LANGUAGE_DETECTION_DEBOUNCE);
 
@@ -164,9 +217,13 @@ export default function CodeDetector() {
   >(() => handleSetOnChangeCodeCallback(isEditable, autoDetect));
 
   // Initial language detection if code is present and autoDetect is enabled
-  // Initial language detection if code is present and autoDetect is enabled
   useEffect(() => {
     if (code && autoDetect && code.length >= MIN_CHARS_FOR_DETECTION) {
+      setLanguageDetectionCache({
+        detectedLanguage: '',
+        consecutiveCount: 0,
+        skipCount: 0,
+      });
       detectLanguage(code);
     }
   }, [code, autoDetect, detectLanguage]);
@@ -279,6 +336,13 @@ export default function CodeDetector() {
       setOnChangeCodeCallback(() =>
         handleSetOnChangeCodeCallback(isEditable, event.target.checked)
       );
+      
+      // Reset language detection cache when toggling auto-detect
+      setLanguageDetectionCache({
+        detectedLanguage: '',
+        consecutiveCount: 0,
+        skipCount: 0,
+      });
     },
     [
       isEditable,
@@ -357,7 +421,15 @@ export default function CodeDetector() {
                 'border border-black p-2 sm:p-1 bg-gray-100 disabled:text-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-base sm:text-sm min-h-[44px] sm:min-h-0 w-full sm:w-auto'
               )}
               value={language}
-              onChange={e => setLanguage(e.target.value)}
+              onChange={e => {
+                setLanguage(e.target.value);
+                // Reset language detection cache when manually changing language
+                setLanguageDetectionCache({
+                  detectedLanguage: '',
+                  consecutiveCount: 0,
+                  skipCount: 0,
+                });
+              }}
               disabled={autoDetect}
             >
               {mostUsedLanguages}
