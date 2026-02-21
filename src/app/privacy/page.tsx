@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
-import Link from 'next/link';
+import FooterNav from '../ui/footer-nav';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - No Data Collection, Complete Privacy',
   description: 'Tiny Code Share privacy policy: We collect no data, store no code, and track nothing. Your privacy is guaranteed by design.',
+  alternates: { canonical: '/privacy' },
   openGraph: {
     title: 'Privacy Policy - Tiny Code Share',
     description: 'Complete privacy guaranteed: No data collection, no server storage, no tracking.',
@@ -167,16 +168,7 @@ export default function Privacy() {
         </div>
       </section>
 
-      <footer className="mt-12 pt-8 border-t border-gray-200">
-        <div className="text-center">
-          <Link 
-            href="/" 
-            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Start Sharing Code →
-          </Link>
-        </div>
-      </footer>
+      <FooterNav currentPath="/privacy" />
     </main>
   );
 }

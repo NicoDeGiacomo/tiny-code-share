@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
-import Link from 'next/link';
+import FooterNav from '../ui/footer-nav';
 
 export const metadata: Metadata = {
   title: 'About - Privacy-First Code Sharing Tool',
-  description: 'Learn about Tiny Code Share, the open-source privacy-focused code snippet sharing tool that never stores your code on servers.',
+  description: 'Tiny Code Share is an open-source tool built on Next.js 15 and the Monaco editor. Learn why we created a code sharing platform that never stores data on servers.',
+  alternates: { canonical: '/about' },
   openGraph: {
     title: 'About Tiny Code Share - Privacy-First Code Sharing',
     description: 'Learn about our privacy-focused approach to code snippet sharing with no server storage.',
@@ -31,16 +32,17 @@ export default function About() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Privacy-First Design</h2>
+          <h2 className="text-2xl font-semibold mb-4">Why We Built It</h2>
           <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
             <p className="text-green-800">
               <strong>Zero Server Storage:</strong> Your code is never stored on our servers or any external database.
             </p>
           </div>
           <p className="text-gray-700 leading-relaxed">
-            We use URL fragments (the part after #) to store your code directly in the browser URL. This means 
-            your sensitive code snippets remain completely private and are only accessible to those you share 
-            the link with.
+            Existing code-sharing platforms require accounts, store your snippets on their servers, and track usage.
+            We wanted a tool that treats developer privacy as a default, not a premium feature. By encoding code
+            into URL fragments - which browsers never send to web servers - Tiny Code Share ensures your
+            sensitive snippets stay between you and whoever you share the link with.
           </p>
         </div>
 
@@ -109,16 +111,7 @@ export default function About() {
         </div>
       </section>
 
-      <footer className="mt-12 pt-8 border-t border-gray-200">
-        <div className="text-center">
-          <Link 
-            href="/" 
-            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Start Sharing Code →
-          </Link>
-        </div>
-      </footer>
+      <FooterNav currentPath="/about" />
     </main>
   );
 }

@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
-import Link from 'next/link';
+import FooterNav from '../ui/footer-nav';
 
 export const metadata: Metadata = {
-  title: 'How It Works - URL Fragment Code Sharing Technology',
-  description: 'Learn how Tiny Code Share uses URL fragments and client-side compression to share code snippets without server storage.',
+  title: 'How It Works - Private Code Sharing via URL',
+  description: 'Tiny Code Share compresses code with LZ-String, encodes it into URL fragments, and shares it without any server storage. Learn the step-by-step technical process.',
+  alternates: { canonical: '/how-it-works' },
   openGraph: {
     title: 'How Tiny Code Share Works - Technical Details',
     description: 'Discover the technology behind privacy-first code sharing with URL fragments.',
@@ -11,8 +12,45 @@ export const metadata: Metadata = {
 };
 
 export default function HowItWorks() {
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Share Code Privately with Tiny Code Share",
+    "description": "Share code snippets without server storage using URL fragment encoding and LZ-String compression.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Paste or type your code",
+        "text": "Open Tiny Code Share and enter your code into the Monaco editor, which provides syntax highlighting and automatic language detection."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Automatic compression",
+        "text": "Your code is compressed client-side using the LZ-String algorithm, reducing its size by 50-90%."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "URL fragment encoding",
+        "text": "The compressed code is encoded into the URL fragment (after #), which is never sent to any web server."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Share the link",
+        "text": "Copy the generated URL and share it. The recipient's browser decodes and displays the code with full syntax highlighting."
+      }
+    ]
+  };
+
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
       <header className="mb-8">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4">How It Works</h1>
         <p className="text-lg text-gray-600">
@@ -30,7 +68,7 @@ export default function HowItWorks() {
           </p>
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
             <p className="text-blue-800">
-              <strong>Example:</strong> https://tiny-code-share.vercel.app/#your-compressed-code-here
+              <strong>Example:</strong> https://www.tinycodeshare.app/#your-compressed-code-here
             </p>
             <p className="text-blue-700 text-sm mt-2">
               Everything after # stays in your browser and is never sent to our servers.
@@ -211,16 +249,7 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      <footer className="mt-12 pt-8 border-t border-gray-200">
-        <div className="text-center">
-          <Link 
-            href="/" 
-            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Start Sharing Code →
-          </Link>
-        </div>
-      </footer>
+      <FooterNav currentPath="/how-it-works" />
     </main>
   );
 }

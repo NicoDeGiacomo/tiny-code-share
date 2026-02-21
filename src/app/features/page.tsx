@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
-import Link from 'next/link';
+import FooterNav from '../ui/footer-nav';
 
 export const metadata: Metadata = {
   title: 'Features - Complete Code Sharing Solution',
-  description: 'Explore all features of Tiny Code Share: privacy-first design, syntax highlighting, mobile support, and more developer-friendly capabilities.',
+  description: 'Monaco editor with 200+ languages, LZ-String compression, automatic language detection, and zero server storage. Explore every Tiny Code Share feature.',
+  alternates: { canonical: '/features' },
   openGraph: {
     title: 'Tiny Code Share Features - Everything You Need',
     description: 'Privacy-first code sharing with syntax highlighting, mobile support, and developer-friendly features.',
@@ -11,13 +12,31 @@ export const metadata: Metadata = {
 };
 
 export default function Features() {
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Tiny Code Share Features",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Zero Server Storage", "description": "Your code never touches a server. Everything is processed client-side." },
+      { "@type": "ListItem", "position": 2, "name": "Monaco Editor", "description": "The same powerful editor used in VS Code, with IntelliSense and code completion." },
+      { "@type": "ListItem", "position": 3, "name": "200+ Language Support", "description": "Automatic language detection and syntax highlighting for JavaScript, Python, Go, Rust, and more." },
+      { "@type": "ListItem", "position": 4, "name": "LZ-String Compression", "description": "Advanced compression reduces code size by 50-90%, creating shorter URLs." },
+      { "@type": "ListItem", "position": 5, "name": "Instant Sharing", "description": "Generate shareable URLs instantly as you type. No save buttons, no waiting." },
+      { "@type": "ListItem", "position": 6, "name": "Mobile Responsive", "description": "Perfect experience on desktop, tablet, and mobile devices." }
+    ]
+  };
+
   return (
     <main className="min-h-screen p-4 sm:p-8 max-w-6xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       <header className="mb-12 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold mb-4">Features</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Everything you need for secure, fast, and beautiful code sharing. 
-          Built with privacy and developer experience in mind.
+          Monaco editor, 200+ language support, LZ-String compression, and zero server storage.
+          Everything you need for fast, private code sharing.
         </p>
       </header>
 
@@ -302,20 +321,7 @@ export default function Features() {
         </div>
       </section>
 
-      <footer className="mt-16 pt-8 border-t border-gray-200">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold mb-4">Ready to Start Sharing?</h3>
-          <p className="text-gray-600 mb-6">
-            Experience the fastest, most private way to share code snippets.
-          </p>
-          <Link 
-            href="/" 
-            className="inline-block bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            Try It Now →
-          </Link>
-        </div>
-      </footer>
+      <FooterNav currentPath="/features" />
     </main>
   );
 }
